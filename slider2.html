@@ -206,6 +206,7 @@ Swipe.prototype = {
         this.width = this.container.getBoundingClientRect().width;
 
         // return immediately if measurement fails
+        // 准备修改this.width
         if (!this.width) return null;
 
         // hide slider element but keep positioning during setup

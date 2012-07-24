@@ -132,7 +132,10 @@ Swipe.prototype = {
             if (img.complete) {
                 ready.call(img);
                 load && load.call(img);
-                return;
+                return {
+                    ready : true,
+                    width : img.width
+                }
             }
 
             width = img.width;
@@ -196,7 +199,6 @@ Swipe.prototype = {
             var img = $(this),
                 imgSrc = img.attr("data-img");
 
-
             //预加载图片张数
             if(index < prloadNum){
 
@@ -210,8 +212,7 @@ Swipe.prototype = {
 
                         img.parents("li").width(w);
                     })
-                )
-
+                );
             }
 
         });
@@ -220,9 +221,7 @@ Swipe.prototype = {
 
         if (intervalId === null) {
             intervalId = setInterval(function () {
-                console.log(">>>>");
-                 console.log(listTick);
-                console.log("<<<<");
+
                 if (listTick[0] && listTick[0].ready) {
                     self.imgWidthStick.push(listTick[0].width + 1);//一个像素空距
                     listTick.splice(0, 1);
@@ -315,7 +314,7 @@ Swipe.prototype = {
 
     needPreload:function(){
         //当前序列值快到右侧
-        if(this.index && this.index + 2 >= this.imgWidthStick.length){
+        if(this.index && (this.index + 2 >= this.imgWidthStick.length)){
 
             this.proloadImg(2);
         }

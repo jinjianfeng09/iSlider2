@@ -27,8 +27,6 @@ window.Swipe = function(element, options) {
     this.element.style.listStyle = 'none';
 
 
-    //*** ul左侧位移
-    this.GOLBALLeft = 0;
     //*** 图片堆栈数组
     this.imgWidthStick = [];
 
@@ -36,10 +34,9 @@ window.Swipe = function(element, options) {
     this.setup();
 
 
-    //图片预加载
-    this.proloadImg(4);
 
-    // begin auto slideshow
+
+    //自动autoplay
     this.begin();
 
     // add event listeners
@@ -88,6 +85,9 @@ Swipe.prototype = {
           //  el.style.verticalAlign = 'top';
         }
         **** */
+
+        //图片预加载
+        this.proloadImg(4);
 
 
         // set start position and force translate to remove initial flickering
@@ -301,7 +301,7 @@ Swipe.prototype = {
         /*
          * 判断是否需要预加载
          * */
-        this.needPreload();
+    //    this.needPreload();
 
     },
 
@@ -431,6 +431,8 @@ Swipe.prototype = {
             // cancel slideshow
             clearTimeout(this.interval);
 
+            var curWidth = this.imgWidthStick[this.index];
+
             // increase resistance if first or last slide
             this.deltaX =
                     this.deltaX /
@@ -438,11 +440,11 @@ Swipe.prototype = {
                                     || this.index == this.length - 1              // or if last slide and sliding right
                                     && this.deltaX < 0                            // and if sliding at all
                                     ) ?
-                                    ( Math.abs(this.deltaX) / this.width + 1 )      // determine resistance level
+                                    ( Math.abs(this.deltaX) / curWidth + 1 )      // determine resistance level 回弹
                                     : 1 );                                          // no resistance if false
 
             // translate immediately 1-to-1
-            this.element.style.MozTransform = this.element.style.webkitTransform = 'translate3d(' + (this.deltaX - this.index * this.width) + 'px,0,0)';
+            this.element.style.MozTransform = this.element.style.webkitTransform = 'translate3d(' + (this.deltaX - this.index * curWidth) + 'px,0,0)';
 
         }
 

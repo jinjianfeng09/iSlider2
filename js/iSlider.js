@@ -1,3 +1,9 @@
+/**
+ * @fileOverview This is a swipe for youai
+ * @author jinjianfeng
+ * @version 0.1
+ * @requires zepto@1.0.0
+ */
 window.Swipe = function(element, options) {
 
     // return immediately if element doesn't exist

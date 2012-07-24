@@ -262,6 +262,7 @@ Swipe.prototype = {
 
     slide: function(index, duration) {
 
+        //计算当前index相对应的左侧偏移
         var ulLeft =  this._calculateLeft(index);
 
         var style = this.element.style;
@@ -285,6 +286,24 @@ Swipe.prototype = {
 
         // set new index to allow for expression arguments
         this.index = index;
+
+        /*
+         * 判断是否需要预加载
+         * */
+        this.needPreload();
+
+    },
+
+
+    needPreload:function(){
+        console.log(">>need preload");
+      console.log(this.index);
+      console.log(this.imgWidthStick);
+        console.log("<<need preload");
+        //当前序列值快到右侧
+        if(this.index && (this.index +2 >= this.imgWidthStick.length)){
+            this.proloadImg(1);
+        }
 
     },
 

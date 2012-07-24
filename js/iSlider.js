@@ -252,19 +252,11 @@ Swipe.prototype = {
     *
     * */
     _calculateLeft:function(index){
-        console.log(index);
-        var totalWidth = 0,
-            tmp = this.imgWidthStick,
+
+        var tmp = this.imgWidthStick,
             newArr = tmp.slice(0,index);
-      /*  for(var i = 0 ; i < index;i++){
-            totalWidth += newArr[i];
-        }
 
-        console.log(newArr);
-        console.log(index ? eval(newArr.join("+")) : 0);*/
         return index ? eval(newArr.join("+")) : 0;
-
-
     },
 
 

@@ -19,6 +19,7 @@
     float:left;
     width:60px;
     height:180px;
+    position:relative;
 }
 
 .relative-promtion .tags span{
@@ -39,6 +40,7 @@
 }
 
 .promotion-wrap{
+    float:left;
     position:relative;
     width:280px;
     height:180px;
@@ -51,7 +53,6 @@
 .promotion-list li{
     float:left;
     position:relative;
-    display:inline;
     width:auto;
     margin-left:1px;
     height:180px;
@@ -88,14 +89,15 @@
 
      <section class="relative-promtion" id="gallery">
 
-
+        <div class="tags pink" id="tags">
+             <span>好看</span>
+             <span class="even">不好看</span>
+             <span>很好看</span>
+         </div>
         <div class="promotion-wrap"  id="slider">
+
             <ul class="promotion-list clearfix">
-              <!--  <li class="tags pink">
-                    <span>好看</span>
-                    <span class="even">不好看</span>
-                    <span>很好看</span>
-                </li>-->
+
                 <li><a href="#">
                     <img src="" class="lazy" data-img="http://img04.taobaocdn.com/tps/i4/T186jpXbXtXXauUnsh-180-180.png"/>
                     <span class="price"><em></em><b>￥89.00</b></span>

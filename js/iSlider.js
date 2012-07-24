@@ -188,54 +188,45 @@ Swipe.prototype = {
     //预加载图片
     proloadImg:function (prloadNum) {
 
-        var self = this,
-                totalWidth = 0,
-                imgs = $("img.lazy", "#slider");
-
-        var listTick = [];
+        var self = this;
+        var imgs = $("img.lazy", "#slider"),
+            listTick = [];
 
         imgs.each(function (index, node) {
             var img = $(this),
-                    imgSrc = img.attr("data-img");
+                imgSrc = img.attr("data-img");
 
             //预加载图片张数
             if(index < prloadNum){
 
-
                 listTick.push(
-                        self._imgReady(imgSrc, function () {
-                            var w = this.width;
+                    self._imgReady(imgSrc, function () {
+                        var w = this.width;
 
-                            img.attr("src", imgSrc).removeClass("lazy").css({opacity:0.3}).animate({
-                                opacity:1
-                            }, 100);
+                        img.attr("src", imgSrc).removeClass("lazy").css({opacity:0.3}).animate({
+                            opacity:1
+                        }, 100);
 
-                            img.parents("li").width(w);
-
-                        })
+                        img.parents("li").width(w);
+                    })
                 )
-
             }
-
 
         });
 
-
-
-
         var intervalId = null;
 
-        if(intervalId === null){
-            intervalId = setInterval(function() {
-                if(listTick[0] && listTick[0].ready){
-                    self.imgWidthStick.push(listTick[0].width+1);//一个像素空距
-                    listTick.splice(0,1);
+        if (intervalId === null) {
+            intervalId = setInterval(function () {
+                if (listTick[0] && listTick[0].ready) {
+                    self.imgWidthStick.push(listTick[0].width + 1);//一个像素空距
+                    listTick.splice(0, 1);
                 }
 
-                if(!listTick[0]){
+                if (!listTick[0]) {
 
-                    var imgListArr = self.imgWidthStick;
-                    var totalW = eval(imgListArr.join("+")) + imgListArr.length;
+                    var imgListArr = self.imgWidthStick,
+                        totalW = eval(imgListArr.join("+")) + imgListArr.length;
                     $(".promotion-list").width(totalW);
 
                     clearInterval(intervalId);
@@ -245,10 +236,7 @@ Swipe.prototype = {
 
             }, 100);
 
-
-
         }
-
 
     },
 
@@ -293,6 +281,23 @@ Swipe.prototype = {
         // set new index to allow for expression arguments
         this.index = index;
 
+        //隐藏分类
+       /* if(this.index == 1){
+            $("#slider").animate({
+                  "left":-60
+            },200,'ease-out',function(){
+                $("#tags").css({
+                    "visibility":"hidden"
+                })
+            });
+        }
+        if(this.index == 0){
+            $("#tags").css({ "visibility":"visible"  });
+            $("#slider").animate({
+                "left":0
+            },200,'ease-out');
+        }*/
+
         /*
          * 判断是否需要预加载
          * */
@@ -302,13 +307,9 @@ Swipe.prototype = {
 
 
     needPreload:function(){
-        console.log(">>need preload");
-      console.log(this.index);
-      console.log(this.imgWidthStick);
-        console.log("<<need preload");
         //当前序列值快到右侧
-        if(this.index && (this.index +2 >= this.imgWidthStick.length)){
-            this.proloadImg(1);
+        if(this.index + 2 >= this.imgWidthStick.length){
+            this.proloadImg(2);
         }
 
     },

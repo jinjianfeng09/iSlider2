@@ -187,14 +187,15 @@ Swipe.prototype = {
 
     //预加载图片
     proloadImg:function (prloadNum) {
-
         var self = this;
         var imgs = $("img.lazy", "#slider"),
             listTick = [];
 
         imgs.each(function (index, node) {
+
             var img = $(this),
                 imgSrc = img.attr("data-img");
+
 
             //预加载图片张数
             if(index < prloadNum){
@@ -210,6 +211,7 @@ Swipe.prototype = {
                         img.parents("li").width(w);
                     })
                 )
+
             }
 
         });
@@ -218,6 +220,9 @@ Swipe.prototype = {
 
         if (intervalId === null) {
             intervalId = setInterval(function () {
+                console.log(">>>>");
+                 console.log(listTick);
+                console.log("<<<<");
                 if (listTick[0] && listTick[0].ready) {
                     self.imgWidthStick.push(listTick[0].width + 1);//一个像素空距
                     listTick.splice(0, 1);
@@ -225,8 +230,10 @@ Swipe.prototype = {
 
                 if (!listTick[0]) {
 
+
                     var imgListArr = self.imgWidthStick,
                         totalW = eval(imgListArr.join("+")) + imgListArr.length;
+
                     $(".promotion-list").width(totalW);
 
                     clearInterval(intervalId);
@@ -301,14 +308,15 @@ Swipe.prototype = {
         /*
          * 判断是否需要预加载
          * */
-    //    this.needPreload();
+        this.needPreload();
 
     },
 
 
     needPreload:function(){
         //当前序列值快到右侧
-        if(this.index + 2 >= this.imgWidthStick.length){
+        if(this.index && this.index + 2 >= this.imgWidthStick.length){
+
             this.proloadImg(2);
         }
 
@@ -452,16 +460,12 @@ Swipe.prototype = {
 
     onTouchEnd: function(e) {
 
-        //****  获取当前index值的width
-
-        console.log("this idndexf is "+this.index);
-        console.log(this.imgWidthStick[this.index]);
-
         // determine if slide attempt triggers next/prev slide
         var isValidSlide =
                 Number(new Date()) - this.start.time < 250      // if slide duration is less than 250ms
                         && Math.abs(this.deltaX) > 20                   // and if slide amt is greater than 20px
                     ///******    || Math.abs(this.deltaX) > this.width/2,        // or if slide amt is greater than half the width
+                //将this.width修改为可变宽度
                 || Math.abs(this.deltaX) > this.imgWidthStick[this.index]/2,        // or if slide amt is greater than half the width
 
             // determine if slide attempt is past start and end

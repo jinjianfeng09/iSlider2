@@ -288,7 +288,7 @@ Swipe.prototype = {
         this.index = index;
 
         //隐藏分类
-       /* if(this.index == 1){
+        /*if(this.index == 1){
             $("#slider").animate({
                   "left":-60
             },200,'ease-out',function(){
@@ -441,6 +441,8 @@ Swipe.prototype = {
             var curWidth = this.imgWidthStick[this.index];
 
             // increase resistance if first or last slide
+
+            //TODO:修正this.length
             this.deltaX =
                     this.deltaX /
                             ( (!this.index && this.deltaX > 0               // if first slide and sliding left

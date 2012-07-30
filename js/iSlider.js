@@ -19,8 +19,8 @@ window.Swipe = function(element, options) {
     this.delay = this.options.auto || 0;
 
     // reference dom elements
-    this.container = element;
-    this.element = this.container.children[0]; // the slide panel
+    this.container = element;       //slider的容器
+    this.element = this.container.children[0];
 
     // static css
     this.container.style.overflow = 'hidden';
@@ -58,6 +58,7 @@ Swipe.prototype = {
     setup: function() {
 
         // get and measure amt of slides
+        //this.element指代ul
         this.slides = this.element.children;
         this.length = this.slides.length;
 
@@ -415,6 +416,7 @@ Swipe.prototype = {
         // set transition time to 0 for 1-to-1 touch movement
         this.element.style.MozTransitionDuration = this.element.style.webkitTransitionDuration = 0;
 
+        e.stopPropagation();
     },
 
     onTouchMove: function(e) {
@@ -438,11 +440,16 @@ Swipe.prototype = {
             // cancel slideshow
             clearTimeout(this.interval);
 
-            var curWidth = this.imgWidthStick[this.index];
+          //  var curWidth = this.imgWidthStick[this.index];
+
+
+
+            var curWidth = 270;
 
             // increase resistance if first or last slide
 
             //TODO:修正this.length
+            console.log(this.length);
             this.deltaX =
                     this.deltaX /
                             ( (!this.index && this.deltaX > 0               // if first slide and sliding left
@@ -452,9 +459,13 @@ Swipe.prototype = {
                                     ( Math.abs(this.deltaX) / curWidth + 1 )      // determine resistance level 回弹
                                     : 1 );                                          // no resistance if false
 
+
+            console.log(this.deltaX -this.index * curWidth);
+
             // translate immediately 1-to-1
             this.element.style.MozTransform = this.element.style.webkitTransform = 'translate3d(' + (this.deltaX - this.index * curWidth) + 'px,0,0)';
 
+            e.stopPropagation();
         }
 
     },
@@ -467,7 +478,7 @@ Swipe.prototype = {
                         && Math.abs(this.deltaX) > 20                   // and if slide amt is greater than 20px
                     ///******    || Math.abs(this.deltaX) > this.width/2,        // or if slide amt is greater than half the width
                 //将this.width修改为可变宽度
-                || Math.abs(this.deltaX) > this.imgWidthStick[this.index]/2,        // or if slide amt is greater than half the width
+       //        || Math.abs(this.deltaX) > this.imgWidthStick[this.index]/2,        // or if slide amt is greater than half the width
 
             // determine if slide attempt is past start and end
                 isPastBounds =

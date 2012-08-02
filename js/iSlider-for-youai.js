@@ -65,14 +65,39 @@ window.Swipe = function(element, options) {
 
 Swipe.prototype = {
 
+
+
+
     setup: function() {
+        var self = this;
+
+
 
         // get and measure amt of slides
         this.slides = this.element.children;
+
+
+
+
+        $.ajax({
+            url:"ajax.json",
+            success:function (response) {
+                if (response.ret[0].indexOf("SUCCESS::") != -1) {
+                    var items = response.data.result.itemDetailList;
+                    self.itemsList = [].concat(self.makeArray(items));
+                    var todo = self.itemsList.splice(0,4);
+                    self.timedChunk(todo,self._addItem,  self,function() {   }      );
+
+                }
+            }
+        });
+
+
+
         this.length = this.slides.length;
 
         // return immediately if their are less than two slides
-        if (this.length < 2) return null;
+    //    if (this.length < 2) return null;
 
         // determine width of each slide
         this.width = this.container.getBoundingClientRect().width;
@@ -86,19 +111,10 @@ Swipe.prototype = {
 
 
         //图片预加载
-        this.proloadImg(4);
-
-       alert("Ffff");
-        $.ajax({
-            url:"ajax.json",
-            success:function (response) {
-                if (response.ret[0].indexOf("SUCCESS::") != -1) {
-                    var items = response.data.result;
+   //     this.proloadImg(4);
 
 
-                }
-            }
-        });
+
 
 
         // set start position and force translate to remove initial flickering
@@ -113,11 +129,42 @@ Swipe.prototype = {
     },
 
 
+     makeArray:function(o){
+         var ret = [];
+         for (var i = 0,l = o.length; i < l; i++) {
+             ret[i] = o[i];
+         }
+         return ret;
+     },
+
+    _addItem:function(it){
+        var self = this;
+
+        console.log(it);
+        console.log(self);
+        console.log(self.element);
+
+
+        self._imgReady(it.imageSmallUrl+'_270x180.jpg', function () {
+            var w = this.width;
+
+           // it.attr("src", it.imageSmallUrl).removeClass("lazy");
+
+            $(self.element).append('<li style="width:'+this.width+'px"><a href="#"><img src="'+it.imageSmallUrl+'_270x180.jpg" class="lazy" data-img="'+it.imageSmallUrl+'"><span class="price"><em></em><b>￥5800</b></span></a></li>');
+
+            self.imgWidthStick.push(this.width + self.MARGIN_GRAP);//li空隙
+            var imgListArr = self.imgWidthStick,
+                totalW = eval(imgListArr.join("+")) + imgListArr.length*self.MARGIN_GRAP;
+            console.log(totalW);
+            $(self.element).width(totalW);
+        })
 
 
 
-   timedChunk : function(items, process, context, callback) {
-    var todo = [].concat(S.makeArray(items)), stopper = {}, timer;
+    },
+
+   timedChunk : function(todo, process, context, callback) {
+    var  stopper = {}, timer;
     if(todo.length > 0) {
         timer = setTimeout(function() {
             var start = +new Date();
@@ -129,11 +176,11 @@ Swipe.prototype = {
             if(todo.length > 0) {
                 timer = setTimeout(arguments.callee, 25);
             } else {
-                callback && callback.call(context, items);
+                callback && callback.call(context, todo);
             }
         }, 25);
     } else {
-        callback && S.later(callback, 0, false, context, [items]);
+        callback;
     }
 
     stopper.stop = function() {
@@ -334,22 +381,7 @@ Swipe.prototype = {
         // set new index to allow for expression arguments
         this.index = index;
 
-        //隐藏分类
-        /*if(this.index == 1){
-            $("#slider").animate({
-                  "left":-60
-            },200,'ease-out',function(){
-                $("#tags").css({
-                    "visibility":"hidden"
-                })
-            });
-        }
-        if(this.index == 0){
-            $("#tags").css({ "visibility":"visible"  });
-            $("#slider").animate({
-                "left":0
-            },200,'ease-out');
-        }*/
+
 
         /*
          * 判断是否需要预加载
@@ -360,10 +392,14 @@ Swipe.prototype = {
 
 
     needPreload:function(){
+        var self = this;
         //当前序列值快到右侧
         if(this.index && (this.index + 2 >= this.imgWidthStick.length)){
 
-            this.proloadImg(2);
+            var todo1 = self.itemsList;
+            var todo = todo1.splice(0,2);
+
+            this.timedChunk(todo,self._addItem,  self,function() {   }     );
         }
 
     },

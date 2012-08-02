@@ -331,34 +331,7 @@ Swipe.prototype = {
 
     },
 
-    getPos: function() {
 
-        // return current index position
-        return this.index;
-
-    },
-
-    prev: function(delay) {
-
-        // cancel next scheduled automatic transition, if any
-        this.delay = delay || 0;
-        clearTimeout(this.interval);
-
-        // if not at first slide
-        if (this.index) this.slide(this.index-1, this.speed);
-
-    },
-
-    next: function(delay) {
-
-        // cancel next scheduled automatic transition, if any
-        this.delay = delay || 0;
-        clearTimeout(this.interval);
-
-        if (this.index < this.length - 1) this.slide(this.index+1, this.speed); // if not last slide
-        else this.slide(0, this.speed); //if last slide return to start
-
-    },
 
     begin: function() {
 

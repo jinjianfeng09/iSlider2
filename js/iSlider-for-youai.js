@@ -11,7 +11,7 @@
  * Copyright 2011, Licensed GPL & MIT
  *
  */
-window.Swipe = function(element, options) {
+window.Swipe = function (element, options) {
 
     // return immediately if element doesn't exist
     if (!element) return null;
@@ -22,7 +22,8 @@ window.Swipe = function(element, options) {
     this.options = options || {};
     this.index = this.options.startSlide || 0;
     this.speed = this.options.speed || 300;
-    this.callback = this.options.callback || function() {};
+    this.callback = this.options.callback || function () {
+    };
     this.delay = this.options.auto || 0;
 
     // reference dom elements
@@ -34,7 +35,6 @@ window.Swipe = function(element, options) {
     this.element.style.listStyle = 'none';
 
 
-
     //每个li之间的空隙
     this.MARGIN_GRAP = 2;
     //*** 图片堆栈数组
@@ -42,8 +42,6 @@ window.Swipe = function(element, options) {
 
     // trigger slider initialization
     this.setup();
-
-
 
 
     //自动autoplay
@@ -68,15 +66,12 @@ Swipe.prototype = {
 
 
 
-    setup: function() {
+    setup:function () {
         var self = this;
-
 
 
         // get and measure amt of slides
         this.slides = this.element.children;
-
-
 
 
         $.ajax({
@@ -85,19 +80,19 @@ Swipe.prototype = {
                 if (response.ret[0].indexOf("SUCCESS::") != -1) {
                     var items = response.data.result.itemDetailList;
                     self.itemsList = [].concat(self.makeArray(items));
-                    var todo = self.itemsList.splice(0,4);
-                    self.timedChunk(todo,self._addItem,  self,function() {   }      );
+                    var todo = self.itemsList.splice(0, 4);
+                    self.timedChunk(todo, self._addItem, self, function () {
+                    });
 
                 }
             }
         });
 
 
-
         this.length = this.slides.length;
 
         // return immediately if their are less than two slides
-    //    if (this.length < 2) return null;
+        //    if (this.length < 2) return null;
 
         // determine width of each slide
         this.width = this.container.getBoundingClientRect().width;
@@ -110,13 +105,6 @@ Swipe.prototype = {
         this.container.style.visibility = 'hidden';
 
 
-        //图片预加载
-   //     this.proloadImg(4);
-
-
-
-
-
         // set start position and force translate to remove initial flickering
         this.slide(this.index, 0);
 
@@ -124,76 +112,65 @@ Swipe.prototype = {
         this.container.style.visibility = 'visible';
 
 
-
-
     },
 
 
-     makeArray:function(o){
-         var ret = [];
-         for (var i = 0,l = o.length; i < l; i++) {
-             ret[i] = o[i];
-         }
-         return ret;
-     },
+    makeArray:function (o) {
+        var ret = [];
+        for (var i = 0, l = o.length; i < l; i++) {
+            ret[i] = o[i];
+        }
+        return ret;
+    },
 
-    _addItem:function(it){
+    _addItem:function (item) {
         var self = this;
 
-        console.log(it);
-        console.log(self);
-        console.log(self.element);
+        self._imgReady(item.imageSmallUrl + '_270x180.jpg', function () {
 
-
-        self._imgReady(it.imageSmallUrl+'_270x180.jpg', function () {
-            var w = this.width;
-
-           // it.attr("src", it.imageSmallUrl).removeClass("lazy");
-
-            $(self.element).append('<li style="width:'+this.width+'px"><a href="#"><img src="'+it.imageSmallUrl+'_270x180.jpg" class="lazy" data-img="'+it.imageSmallUrl+'"><span class="price"><em></em><b>￥5800</b></span></a></li>');
+            $(self.element).append('<li style="width:' + this.width + 'px"><a href="#"><img src="' + item.imageSmallUrl + '_270x180.jpg"><span class="price"><em></em><b>￥5800</b></span></a></li>');
 
             self.imgWidthStick.push(this.width + self.MARGIN_GRAP);//li空隙
             var imgListArr = self.imgWidthStick,
-                totalW = eval(imgListArr.join("+")) + imgListArr.length*self.MARGIN_GRAP;
-            console.log(totalW);
+                totalW = eval(imgListArr.join("+")) + imgListArr.length * self.MARGIN_GRAP;
+
             $(self.element).width(totalW);
         })
 
 
-
     },
 
-   timedChunk : function(todo, process, context, callback) {
-    var  stopper = {}, timer;
-    if(todo.length > 0) {
-        timer = setTimeout(function() {
-            var start = +new Date();
-            do {
-                var item = todo.shift();
-                process.call(context, item);
-            } while (todo.length > 0 && (+new Date() - start < 50));
+    timedChunk:function (todo, process, context, callback) {
+        var stopper = {}, timer;
+        if (todo.length > 0) {
+            timer = setTimeout(function () {
+                var start = +new Date();
+                do {
+                    var item = todo.shift();
+                    process.call(context, item);
+                } while (todo.length > 0 && (+new Date() - start < 50));
 
-            if(todo.length > 0) {
-                timer = setTimeout(arguments.callee, 25);
-            } else {
-                callback && callback.call(context, todo);
-            }
-        }, 25);
-    } else {
-        callback;
-    }
-
-    stopper.stop = function() {
-        if(timer) {
-            clearTimeout(timer);
-            todo = [];
-            items.each(function(item) {
-                item.stop();
-            });
+                if (todo.length > 0) {
+                    timer = setTimeout(arguments.callee, 25);
+                } else {
+                    callback && callback.call(context, todo);
+                }
+            }, 25);
+        } else {
+            callback;
         }
-    };
-    return stopper;
-},
+
+        stopper.stop = function () {
+            if (timer) {
+                clearTimeout(timer);
+                todo = [];
+                items.each(function (item) {
+                    item.stop();
+                });
+            }
+        };
+        return stopper;
+    },
 
 
     //图片imgReady预加载
@@ -201,22 +178,22 @@ Swipe.prototype = {
         var list = [], intervalId = null,
 
             // 用来执行队列
-                tick = function () {
-                    for (var i = 0; i < list.length; i++) {
-                        list[i].end ? list.splice(i--, 1) : list[i]();
-                    }
-                    !list.length && stop();
-                },
+            tick = function () {
+                for (var i = 0; i < list.length; i++) {
+                    list[i].end ? list.splice(i--, 1) : list[i]();
+                }
+                !list.length && stop();
+            },
 
             // 停止所有定时器队列
-                stop = function () {
-                    clearInterval(intervalId);
-                    intervalId = null;
-                };
+            stop = function () {
+                clearInterval(intervalId);
+                intervalId = null;
+            };
 
         return function (url, ready, load, error) {
             var onready, width, height, newWidth, newHeight,
-                    img = new Image();
+                img = new Image();
 
             var status = {};
 
@@ -227,8 +204,8 @@ Swipe.prototype = {
                 ready.call(img);
                 load && load.call(img);
                 return {
-                    ready : true,
-                    width : img.width
+                    ready:true,
+                    width:img.width
                 }
             }
 
@@ -248,8 +225,8 @@ Swipe.prototype = {
                 newHeight = img.height;
                 if (newWidth !== width || newHeight !== height ||
                     // 如果图片已经在其他地方加载可使用面积检测
-                        newWidth * newHeight > 1024
-                        ) {
+                    newWidth * newHeight > 1024
+                    ) {
                     ready.call(img);
 
                     onready.end = true;
@@ -282,82 +259,25 @@ Swipe.prototype = {
         };
     })(),
 
-    //预加载图片
-    proloadImg:function (prloadNum) {
-        var self = this;
-        var imgs = $("img.lazy", "#slider"),
-            listTick = [];
-
-        imgs.each(function (index, node) {
-
-            var img = $(this),
-                imgSrc = img.attr("data-img");
-
-            //预加载图片张数
-            if(index < prloadNum){
-
-                listTick.push(
-                    self._imgReady(imgSrc, function () {
-                        var w = this.width;
-
-                        img.attr("src", imgSrc).removeClass("lazy");/*.css({opacity:0.3}).animate({
-                            opacity:1
-                        }, 100);*/
-
-                        img.parents("li").width(w);
-                    })
-                );
-            }
-
-        });
-
-        var intervalId = null;
-
-        if (intervalId === null) {
-            intervalId = setInterval(function () {
-
-                if (listTick[0] && listTick[0].ready) {
-                    self.imgWidthStick.push(listTick[0].width + self.MARGIN_GRAP);//li空隙
-                    listTick.splice(0, 1);
-                }
-
-                if (!listTick[0]) {
-
-
-                    var imgListArr = self.imgWidthStick,
-                        totalW = eval(imgListArr.join("+")) + imgListArr.length*self.MARGIN_GRAP;
-
-                    $(".promotion-list").width(totalW);
-
-                    clearInterval(intervalId);
-                    intervalId = null;
-                }
-
-
-            }, 100);
-
-        }
-
-    },
 
     /*
-    * 通过推入数组堆栈的元算来计算要平移的距离
-    * 传入的index，通过划分 0-index 的数组，即可计算总的宽度
-    *
-    * */
-    _calculateLeft:function(index){
+     * 通过推入数组堆栈的元算来计算要平移的距离
+     * 传入的index，通过划分 0-index 的数组，即可计算总的宽度
+     *
+     * */
+    _calculateLeft:function (index) {
 
         var tmp = this.imgWidthStick,
-            newArr = tmp.slice(0,index);
+            newArr = tmp.slice(0, index);
 
         return index ? eval(newArr.join("+")) : 0;
     },
 
 
-    slide: function(index, duration) {
+    slide:function (index, duration) {
 
         //计算当前index相对应的左侧偏移
-        var ulLeft =  this._calculateLeft(index);
+        var ulLeft = this._calculateLeft(index);
 
         var style = this.element.style;
 
@@ -371,7 +291,7 @@ Swipe.prototype = {
 
 
         // translate to given index position
-       //**** style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
+        //**** style.MozTransform = style.webkitTransform = 'translate3d(' + -(index * this.width) + 'px,0,0)';
 
         style.MozTransform = style.webkitTransform = 'translate3d(' + -(ulLeft) + 'px,0,0)';
 
@@ -382,7 +302,6 @@ Swipe.prototype = {
         this.index = index;
 
 
-
         /*
          * 判断是否需要预加载
          * */
@@ -391,44 +310,44 @@ Swipe.prototype = {
     },
 
 
-    needPreload:function(){
+    needPreload:function () {
         var self = this;
         //当前序列值快到右侧
-        if(this.index && (this.index + 2 >= this.imgWidthStick.length)){
+        if (this.index && (this.index + 2 >= this.imgWidthStick.length)) {
 
             var todo1 = self.itemsList;
-            var todo = todo1.splice(0,2);
+            var todo = todo1.splice(0, 2);
 
-            this.timedChunk(todo,self._addItem,  self,function() {   }     );
+            this.timedChunk(todo, self._addItem, self, function () {
+            });
         }
 
     },
 
 
-
-    begin: function() {
+    begin:function () {
 
         var _this = this;
 
         this.interval = (this.delay)
-                ? setTimeout(function() {
+            ? setTimeout(function () {
             _this.next(_this.delay);
         }, this.delay)
-                : 0;
+            : 0;
 
     },
 
-    stop: function() {
+    stop:function () {
         this.delay = 0;
         clearTimeout(this.interval);
     },
 
-    resume: function() {
+    resume:function () {
         this.delay = this.options.auto || 0;
         this.begin();
     },
 
-    handleEvent: function(e) {
+    handleEvent:function (e) {
         switch (e.type) {
             case 'touchstart': this.onTouchStart(e); break;
             case 'touchmove': this.onTouchMove(e); break;
@@ -441,7 +360,7 @@ Swipe.prototype = {
         }
     },
 
-    transitionEnd: function(e) {
+    transitionEnd:function (e) {
 
         if (this.delay) this.begin();
 
@@ -449,16 +368,16 @@ Swipe.prototype = {
 
     },
 
-    onTouchStart: function(e) {
+    onTouchStart:function (e) {
 
         this.start = {
 
             // get touch coordinates for delta calculations in onTouchMove
-            pageX: e.touches[0].pageX,
-            pageY: e.touches[0].pageY,
+            pageX:e.touches[0].pageX,
+            pageY:e.touches[0].pageY,
 
             // set initial timestamp of touch sequence
-            time: Number( new Date() )
+            time:Number(new Date())
 
         };
 
@@ -475,15 +394,15 @@ Swipe.prototype = {
         e.stopPropagation();
     },
 
-    onTouchMove: function(e) {
+    onTouchMove:function (e) {
 
         // ensure swiping with one touch and not pinching
-        if(e.touches.length > 1 || e.scale && e.scale !== 1) return;
+        if (e.touches.length > 1 || e.scale && e.scale !== 1) return;
 
         this.deltaX = e.touches[0].pageX - this.start.pageX;
 
         // determine if scrolling test has run - one time test
-        if ( typeof this.isScrolling == 'undefined') {
+        if (typeof this.isScrolling == 'undefined') {
             this.isScrolling = !!( this.isScrolling || Math.abs(this.deltaX) < Math.abs(e.touches[0].pageY - this.start.pageY) );
         }
 
@@ -506,49 +425,48 @@ Swipe.prototype = {
 
             //TODO:修正this.length
             this.deltaX =
-                    this.deltaX /
-                            ( (!this.index && this.deltaX > 0               // if first slide and sliding left
-                                    || this.index == this.length - 1              // or if last slide and sliding right
-                                    && this.deltaX < 0                            // and if sliding at all
-                                    ) ?
-                                    ( Math.abs(this.deltaX) / curWidth + 1 )      // determine resistance level 回弹
-                                    : 1 );                                          // no resistance if false
+                this.deltaX /
+                    ( (!this.index && this.deltaX > 0               // if first slide and sliding left
+                        || this.index == this.length - 1              // or if last slide and sliding right
+                        && this.deltaX < 0                            // and if sliding at all
+                        ) ?
+                        ( Math.abs(this.deltaX) / curWidth + 1 )      // determine resistance level 回弹
+                        : 1 );                                          // no resistance if false
 
             // translate immediately 1-to-1
             //临时解决方案：将移动都统一放到touchend
-         //   this.element.style.MozTransform = this.element.style.webkitTransform = 'translate3d(' + (this.deltaX - this.index * curWidth) + 'px,0,0)';
+            //   this.element.style.MozTransform = this.element.style.webkitTransform = 'translate3d(' + (this.deltaX - this.index * curWidth) + 'px,0,0)';
 
             e.stopPropagation();
         }
 
 
-
     },
 
-    onTouchEnd: function(e) {
+    onTouchEnd:function (e) {
 
         // determine if slide attempt triggers next/prev slide
         var isValidSlide =
-                Number(new Date()) - this.start.time < 250      // if slide duration is less than 250ms
-                        && Math.abs(this.deltaX) > 20                   // and if slide amt is greater than 20px
-                    ///******    || Math.abs(this.deltaX) > this.width/2,        // or if slide amt is greater than half the width
+            Number(new Date()) - this.start.time < 250      // if slide duration is less than 250ms
+                && Math.abs(this.deltaX) > 20                   // and if slide amt is greater than 20px
+                ///******    || Math.abs(this.deltaX) > this.width/2,        // or if slide amt is greater than half the width
                 //将this.width修改为可变宽度
-            //    || Math.abs(this.deltaX) > this.imgWidthStick[this.index]/2,        // or if slide amt is greater than half the width
+                //    || Math.abs(this.deltaX) > this.imgWidthStick[this.index]/2,        // or if slide amt is greater than half the width
 
-             //TODO:经过测试可能滑动定宽距离来滚动更符合体验习惯
+                //TODO:经过测试可能滑动定宽距离来滚动更符合体验习惯
 
-            || Math.abs(this.deltaX) > 180/2,        // or if slide amt is greater than half the width
+                || Math.abs(this.deltaX) > 180 / 2, // or if slide amt is greater than half the width
 
             // determine if slide attempt is past start and end
-                isPastBounds =
-                        !this.index && this.deltaX > 0                          // if first slide and slide amt is greater than 0
-                                || this.index == this.length - 1 && this.deltaX < 0;    // or if last slide and slide amt is less than 0
+            isPastBounds =
+                !this.index && this.deltaX > 0                          // if first slide and slide amt is greater than 0
+                    || this.index == this.length - 1 && this.deltaX < 0;    // or if last slide and slide amt is less than 0
 
         // if not scrolling vertically
         if (!this.isScrolling) {
 
             // call slide function with slide end value based on isValidSlide and isPastBounds tests
-            this.slide( this.index + ( isValidSlide && !isPastBounds ? (this.deltaX < 0 ? 1 : -1) : 0 ), this.speed );
+            this.slide(this.index + ( isValidSlide && !isPastBounds ? (this.deltaX < 0 ? 1 : -1) : 0 ), this.speed);
 
         }
 

@@ -1,0 +1,49 @@
+<!doctype html>
+<html dir="ltr" lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+</head>
+<body>
+<h1>例子1</h1>
+<button id="clickme1">没有setTimeout的连续dom操作</button>
+<button id="clickme2">定义了setTImeout的连续dom操作</button>
+<div style="width:1px;background:red;overflow:hidden;height:22px;" id="jd">进度</div>
+<div  id='alink' style="height:200px;overflow:auto;">logs here</div>
+<script type="text/javascript" src="http://cn.yimg.com/i/yui/3.0.0b1/build/yui/yui-min.js"></script>
+<script>
+    <!--
+    YUI().use('node', function(Y){
+//定义暴力程度
+        var rang = 300;
+        var handlePercent = function(k){
+            var w = Math.floor(k/rang*100);
+            Y.Node.get('#jd').setStyle('width',w+'px');
+        };
+        Y.on('click',function(e){
+            Y.Node.get('#alink').set('innerHTML','');
+            var k = 0;
+            var t = new Date();
+            for(var i = 0;i<rang;i++){
+                Y.Node.get('#alink').set('innerHTML',Y.Node.get("#alink").get('innerHTML')+'<br />'+(k++));
+                handlePercent(k);
+                Y.Node.get('#jd').set("innerHTML",(Number(new Date())-Number(t)));
+            }
+        },'#clickme1');
+        Y.on('click',function(e){
+            Y.Node.get('#alink').set('innerHTML','');
+            var k = 0;
+            var t = new Date();
+            var foo = function(){
+                Y.Node.get('#alink').set('innerHTML',Y.Node.get("#alink").get('innerHTML')+'<br />'+(k++));
+                handlePercent(k);
+                Y.Node.get('#jd').set("innerHTML",(Number(new Date())-Number(t)));
+                if(k != rang)setTimeout(arguments.callee,0);
+            };
+            setTimeout(foo,0);
+        },'#clickme2');
+    });
+    //-->
+</script>
+</body>
+</html>

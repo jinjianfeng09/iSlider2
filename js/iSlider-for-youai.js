@@ -84,20 +84,21 @@ Swipe.prototype = {
         // hide slider element but keep positioning during setup
         this.container.style.visibility = 'hidden';
 
-        // dynamic css
-       /* *****
-       this.element.style.width = (this.slides.length * this.width) + 'px';
-        var index = this.slides.length;
-        while (index--) {
-            var el = this.slides[index];
-           // el.style.width = this.width + 'px';
-          //  el.style.display = 'table-cell';
-          //  el.style.verticalAlign = 'top';
-        }
-        **** */
 
         //图片预加载
         this.proloadImg(4);
+
+       alert("Ffff");
+        $.ajax({
+            url:"ajax.json",
+            success:function (response) {
+                if (response.ret[0].indexOf("SUCCESS::") != -1) {
+                    var items = response.data.result;
+
+
+                }
+            }
+        });
 
 
         // set start position and force translate to remove initial flickering
@@ -110,6 +111,42 @@ Swipe.prototype = {
 
 
     },
+
+
+
+
+
+   timedChunk : function(items, process, context, callback) {
+    var todo = [].concat(S.makeArray(items)), stopper = {}, timer;
+    if(todo.length > 0) {
+        timer = setTimeout(function() {
+            var start = +new Date();
+            do {
+                var item = todo.shift();
+                process.call(context, item);
+            } while (todo.length > 0 && (+new Date() - start < 50));
+
+            if(todo.length > 0) {
+                timer = setTimeout(arguments.callee, 25);
+            } else {
+                callback && callback.call(context, items);
+            }
+        }, 25);
+    } else {
+        callback && S.later(callback, 0, false, context, [items]);
+    }
+
+    stopper.stop = function() {
+        if(timer) {
+            clearTimeout(timer);
+            todo = [];
+            items.each(function(item) {
+                item.stop();
+            });
+        }
+    };
+    return stopper;
+},
 
 
     //图片imgReady预加载

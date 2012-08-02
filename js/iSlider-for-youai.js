@@ -4,6 +4,13 @@
  * @version 0.1
  * @requires zepto@1.0.0
  */
+/*
+ * Swipe 1.0
+ *
+ * Brad Birdsall, Prime
+ * Copyright 2011, Licensed GPL & MIT
+ *
+ */
 window.Swipe = function(element, options) {
 
     // return immediately if element doesn't exist

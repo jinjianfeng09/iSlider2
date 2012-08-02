@@ -4,6 +4,13 @@
  * @version 0.1
  * @requires zepto@1.0.0
  */
+/*
+ * Swipe 1.0
+ *
+ * Brad Birdsall, Prime
+ * Copyright 2011, Licensed GPL & MIT
+ *
+ */
 window.Swipe = function(element, options) {
 
     // return immediately if element doesn't exist
@@ -33,9 +40,6 @@ window.Swipe = function(element, options) {
     // trigger slider initialization
     this.setup();
 
-
-
-
     //自动autoplay
     this.begin();
 
@@ -58,7 +62,6 @@ Swipe.prototype = {
     setup: function() {
 
         // get and measure amt of slides
-        //this.element指代ul
         this.slides = this.element.children;
         this.length = this.slides.length;
 
@@ -69,26 +72,15 @@ Swipe.prototype = {
         this.width = this.container.getBoundingClientRect().width;
 
         // return immediately if measurement fails
-        // 准备修改this.width
+        // TODO:remove this.width
         if (!this.width) return null;
 
         // hide slider element but keep positioning during setup
         this.container.style.visibility = 'hidden';
 
-        // dynamic css
-       /* *****
-       this.element.style.width = (this.slides.length * this.width) + 'px';
-        var index = this.slides.length;
-        while (index--) {
-            var el = this.slides[index];
-           // el.style.width = this.width + 'px';
-          //  el.style.display = 'table-cell';
-          //  el.style.verticalAlign = 'top';
-        }
-        **** */
 
         //图片预加载
-        this.proloadImg(4);
+        this.preloadImg(4);
 
 
         // set start position and force translate to remove initial flickering
@@ -190,7 +182,7 @@ Swipe.prototype = {
     })(),
 
     //预加载图片
-    proloadImg:function (prloadNum) {
+    preloadImg:function (prloadNum) {
         var self = this;
         var imgs = $("img.lazy", "#slider"),
             listTick = [];
@@ -317,7 +309,7 @@ Swipe.prototype = {
         //当前序列值快到右侧
         if(this.index && (this.index + 2 >= this.imgWidthStick.length)){
 
-            this.proloadImg(2);
+            this.preloadImg(2);
         }
 
     },

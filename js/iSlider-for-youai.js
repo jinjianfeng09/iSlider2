@@ -105,26 +105,7 @@ Swipe.prototype = {
         this.container.style.visibility = 'hidden';
 
 
-<<<<<<< HEAD
-        //图片预加载
-       // this.proloadImg(4);
 
-
-        $.ajax({
-            url:"ajax.json",
-            success:function (response) {
-                if (response.ret[0].indexOf("SUCCESS::") != -1) {
-                    var items = response.data.result;
-                    alert("Ffff");
-
-
-                }
-            }
-        });
-
-
-=======
->>>>>>> 55eab49121ac8112ead9d875ed23d02d3fcb00a0
         // set start position and force translate to remove initial flickering
         this.slide(this.index, 0);
 

@@ -44,8 +44,6 @@ window.Swipe = function(element, options) {
     this.setup();
 
 
-
-
     //自动autoplay
     this.begin();
 
@@ -86,14 +84,15 @@ Swipe.prototype = {
 
 
         //图片预加载
-        this.proloadImg(4);
+       // this.proloadImg(4);
 
-       alert("Ffff");
+
         $.ajax({
             url:"ajax.json",
             success:function (response) {
                 if (response.ret[0].indexOf("SUCCESS::") != -1) {
                     var items = response.data.result;
+                    alert("Ffff");
 
 
                 }

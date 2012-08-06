@@ -79,8 +79,9 @@ Swipe.prototype = {
             success:function (response) {
                 if (response.ret[0].indexOf("SUCCESS::") != -1) {
                     var items = response.data.result.itemDetailList;
-                    self.itemsList = [].concat(self.makeArray(items));
-                    var todo = self.itemsList.splice(0, 4);
+                    var todo = items.slice(0, 4);
+                    items.splice(0,4);
+                    self.itemsList = items;
                     self.timedChunk(todo, self._addItem, self, function () {
                     });
 
@@ -129,11 +130,11 @@ Swipe.prototype = {
 
         self._imgReady(item.imageSmallUrl + '_270x180.jpg', function () {
 
-            $(self.element).append('<li style="width:' + this.width + 'px"><a href="#"><img src="' + item.imageSmallUrl + '_270x180.jpg"><span class="price"><em></em><b>￥5800</b></span></a></li>');
+            $(self.element).append('<li style="width:' + this.width + 'px"><a href="#"><img src="' + item.imageSmallUrl + '_270x180.jpg"><span class="price"><em></em><b>￥'+item.originalPrice+'</b></span></a></li>');
 
             self.imgWidthStick.push(this.width + self.MARGIN_GRAP);//li空隙
             var imgListArr = self.imgWidthStick,
-                totalW = eval(imgListArr.join("+")) + imgListArr.length * self.MARGIN_GRAP;
+                totalW = eval(imgListArr.join("+"));
 
             $(self.element).width(totalW);
         })
